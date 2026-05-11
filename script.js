@@ -13,6 +13,7 @@ async function refresh() {
     });
 }
 
+// ajout d'un utilisateur avec la méthode POST du backend
 async function addUser() {
     const name = document.getElementById('n').value, email = document.getElementById('e').value;
     if(!name || !email) return alert("Remplissez tout !");
@@ -34,8 +35,8 @@ function connect() {
         const m = JSON.parse(e.data);
         if (m.type === "USER_LIST") {
             document.getElementById('list').innerHTML = m.data.map(uid => `
-                <li class="flex items-center gap-2 text-sm text-slate-700 font-medium">
-                    <span class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm shadow-green-200"></span>
+                <li class="utilisateur-en-ligne">
+                    <span class="point-vert"></span>
                     ${users[uid] || 'ID: ' + uid}
                 </li>
             `).join('');
@@ -44,26 +45,27 @@ function connect() {
     };
 }
 
-// UTILISATION DE : GET /messages/{message_id}
+// récupération d'un message
 async function getMessageInfo(msgId) {
     const res = await fetch(`${API}/messages/${msgId}`);
     const content = await res.json();
     alert(`Contenu brut du serveur pour le message #${msgId} :\n\n"${content}"`);
 }
 
-// UTILISATION DE : DELETE /messages/{message_id}
+// fonction suppression d'un message avec la méthode DELETE du backend
 async function deleteMessage(msgId) {
     if(!confirm("Supprimer ce message définitivement ?")) return;
     await fetch(`${API}/messages/${msgId}`, { method: 'DELETE' });
     load();
 }
 
-// UTILISATION DE : PATCH /messages/{message_id}/read
+// Fonction permettant de marquer comme lu un message 
 async function markAsRead(msgId) {
     await fetch(`${API}/messages/${msgId}/read`, { method: 'PATCH' });
-    load(); // Le message va disparaître à cause de la fonction messages_non_lus() du backend !
+    load(); 
 }
 
+//fonction qui permet d'afficher en live la messagerie
 async function load() {
     const me = document.getElementById('me').value, to = document.getElementById('to').value;
     if (!me || !to) return;
@@ -87,13 +89,12 @@ async function load() {
             
             const actions = `
                 <div class="actions-message">
-                    ${!isMe ? `<button onclick="markAsRead(${m.id_mess})" style="color: #2563eb;">Lu</button>` : ''}
+                    ${!isMe ? `<button onclick="markAsRead(${m.id_mess})">Lu</button>` : ''}
                     <button onclick="getMessageInfo(${m.id_mess})">Info</button>
-                    <button onclick="deleteMessage(${m.id_mess})" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
+                    <button onclick="deleteMessage(${m.id_mess})"><i class="fas fa-trash"></i></button>
                 </div>
             `;
 
-            // Le HTML généré est maintenant beaucoup plus clair
             return `
                 <div class="ligne-message ${isMe ? 'message-moi' : 'message-autre'}">
                     <div class="conteneur-bulle">
@@ -108,6 +109,7 @@ async function load() {
     container.scrollTop = container.scrollHeight;
 }
 
+//envoi d'un message avec la méthode POST du backend 
 async function send() {
     const me = document.getElementById('me').value, to = document.getElementById('to').value, txt = document.getElementById('in').value;
     if(!txt || !to) return;
@@ -119,7 +121,6 @@ async function send() {
             exp_id: parseInt(me), 
             dest_id: parseInt(to), 
             mess_content: txt, 
-            // La date sera gérée par le backend par défaut (datetime.now)
             mess_status: "non_lu" 
         })
     });

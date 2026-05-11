@@ -1,4 +1,3 @@
-/* --- RÉINITIALISATION DE BASE --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,69 +5,78 @@
 }
 
 body {
-    font-family: system-ui, -apple-system, sans-serif;
-    background-color: #f1f5f9;
-    color: #334155;
+    font-family: sans-serif;
+    background-color: #ffffff;
+    color: #000000;
 }
 
-/* --- MISE EN PAGE PRINCIPALE --- */
 .conteneur-application {
     display: flex;
     height: 100vh;
     overflow: hidden;
 }
 
-/* --- BARRE LATÉRALE --- */
+
 .barre-laterale {
-    width: 320px;
-    background-color: #ffffff;
-    border-right: 1px solid #e2e8f0;
+    width: 300px;
+    border-right: 1px solid #dddddd;
     display: flex;
     flex-direction: column;
 }
 
-.en-tete-lateral { padding: 24px; border-bottom: 1px solid #f1f5f9; }
-.logo-titre { color: #4f46e5; font-size: 1.25rem; font-weight: bold; }
+.en-tete-lateral, .contenu-lateral, .zone-utilisateurs-actifs, .pied-lateral {
+    padding: 15px;
+    border-bottom: 1px solid #dddddd;
+}
 
-.contenu-lateral { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-.groupe-saisie { background-color: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
-.groupe-saisie label { font-size: 0.75rem; font-weight: bold; color: #64748b; text-transform: uppercase; }
+.logo-titre { font-size: 1.2rem; }
+
+.groupe-saisie { margin-bottom: 15px; }
+.groupe-saisie label { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+
 
 .menu-deroulant, .champ-saisie, .champ-message {
     width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    outline: none;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    background: #fafafa;
 }
 
-.zone-utilisateurs-actifs { flex: 1; overflow-y: auto; padding: 16px; }
-.titre-section { font-size: 0.75rem; font-weight: bold; color: #64748b; text-transform: uppercase; }
-.liste-utilisateurs { list-style: none; margin-top: 12px; }
-.liste-utilisateurs li { font-size: 0.875rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.titre-section { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
 
-.pied-lateral { padding: 16px; border-top: 1px solid #f1f5f9; }
 
-/* Boutons */
+.liste-utilisateurs { list-style: none; margin-top: 10px; }
+.utilisateur-en-ligne { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; margin-bottom: 10px; }
+.point-vert { width: 10px; height: 10px; background-color: #22c55e; border-radius: 50%; }
+
+
 .bouton-principal, .bouton-envoyer {
-    background-color: #4f46e5; color: white; padding: 10px 16px;
-    border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
 }
-.bouton-principal { width: 100%; margin-top: 8px; }
+.bouton-principal { width: 100%; margin-top: 5px; }
+.bouton-principal:hover, .bouton-envoyer:hover { background-color: #333333; }
 
-/* --- ZONE DE DISCUSSION --- */
-.fenetre-discussion { flex: 1; display: flex; flex-direction: column; background-color: #f8fafc; }
 
-.en-tete-discussion { height: 64px; background-color: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 24px; }
-.info-utilisateur { display: flex; align-items: center; gap: 12px; }
-.avatar-utilisateur { width: 40px; height: 40px; background-color: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+.fenetre-discussion { flex: 1; display: flex; flex-direction: column; }
 
-/* Liste des messages */
-.liste-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-.etat-vide { text-align: center; color: #94a3b8; margin-top: auto; margin-bottom: auto; }
+.en-tete-discussion { padding: 15px; border-bottom: 1px solid #dddddd; display: flex; align-items: center; gap: 10px; }
+.avatar-utilisateur { width: 40px; height: 40px; background-color: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.nom-utilisateur { font-weight: bold; }
+.statut-utilisateur { font-size: 0.8rem; color: #666666; }
 
-/* Bulles de chat */
+
+.liste-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background-color: #fcfcfc; }
+.etat-vide { text-align: center; color: #999999; margin: auto; }
+
+
 .ligne-message { display: flex; width: 100%; }
 .message-moi { justify-content: flex-end; }
 .message-autre { justify-content: flex-start; }
@@ -77,19 +85,21 @@ body {
 .message-moi .conteneur-bulle { align-items: flex-end; }
 .message-autre .conteneur-bulle { align-items: flex-start; }
 
-.bulle { padding: 12px 16px; border-radius: 16px; font-size: 0.875rem; }
-.bulle-envoyee { background-color: #4f46e5; color: white; border-top-right-radius: 4px; }
-.bulle-recue { background-color: #ffffff; border: 1px solid #e2e8f0; border-top-left-radius: 4px; }
+.bulle { padding: 10px 15px; border-radius: 4px; font-size: 0.9rem; }
+.bulle-envoyee { background-color: #eeeeee; color: #000000; }
+.bulle-recue { background-color: #ffffff; border: 1px solid #dddddd; }
 
-.actions-message { display: flex; gap: 12px; font-size: 0.7rem; margin-top: 4px; color: #64748b; }
-.actions-message button { background: none; border: none; cursor: pointer; color: inherit; font-weight: bold; }
 
-/* Zone de saisie (en bas) */
-.zone-saisie-message { padding: 16px; background-color: #ffffff; border-top: 1px solid #e2e8f0; }
-.conteneur-saisie { display: flex; gap: 16px; max-width: 900px; margin: 0 auto; }
+.actions-message { display: flex; gap: 10px; font-size: 0.75rem; margin-top: 5px; }
+.actions-message button { background: none; border: none; cursor: pointer; color: #666666; text-decoration: underline; }
+.actions-message button:hover { color: #000000; }
+
+
+.zone-saisie-message { padding: 15px; background-color: #ffffff; border-top: 1px solid #dddddd; }
+.conteneur-saisie { display: flex; gap: 10px; max-width: 900px; margin: 0 auto; }
 .champ-message { margin-top: 0; flex: 1; }
 
-/* Barre de défilement (Scrollbar) */
-.barre-defilement-perso::-webkit-scrollbar { width: 6px; }
-.barre-defilement-perso::-webkit-scrollbar-track { background: transparent; }
-.barre-defilement-perso::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cccccc; }
