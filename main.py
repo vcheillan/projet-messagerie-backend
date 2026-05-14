@@ -62,21 +62,20 @@ from sqlmodel import create_engine, Session
 database_url = "sqlite:///./main.db"
 engine = create_engine(database_url, echo=True)
 
-# create tables
-# of course this needs to come AFTER all model definitions...
+
 SQLModel.metadata.create_all(engine)
 
-# utility function to get a session
+
 def get_session():
     with Session(engine) as session:
         yield session
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # L'étoile signifie "J'autorise tout le monde" (pratique en dev)
+    allow_origins=["*"], 
     allow_credentials=True,
-    allow_methods=["*"], # Autorise toutes les méthodes (GET, POST, PATCH, DELETE)
-    allow_headers=["*"], # Autorise tous les en-têtes
+    allow_methods=["*"], 
+    allow_headers=["*"], 
 )
 
 def messages_non_lus(liste_message : List[Message]):
@@ -96,6 +95,7 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int):
     except WebSocketDisconnect:
         await manager.disconnect(user_id)
 
+#ajout d'un utilisateur dans la base de données
 @app.post("/users/", response_model = User)
 def create_user(user : User, session: Session = Depends(get_session) ):
     session.add(user)
@@ -103,16 +103,19 @@ def create_user(user : User, session: Session = Depends(get_session) ):
     session.refresh(user)  
     return user
 
+#retourne la liste des utilisateurs (menu déroulant)
 @app.get("/users/", response_model=List[User])
 def list_users(session: Session = Depends(get_session)):
     users = session.exec(select(User)).all()
     return users
 
+#retourne l'utilisateur dont l'id est user_id
 @app.get("/users/{user_id}", response_model = User)
 def get_user1(user_id: int, session: Session = Depends(get_session)):
     user = session.get(User, user_id)
     return user
 
+#créer un message
 @app.post("/messages/", response_model=Message)
 async def create_message(message: Message, session: Session = Depends(get_session)):
     session.add(message)
@@ -129,21 +132,25 @@ async def create_message(message: Message, session: Session = Depends(get_sessio
     
     return message
 
+#regarder les messages reçus d'un utilisateur
 @app.get("/users/{user_id}/inbox", response_model = List[Message])
 def get_messages_user(user_id: int, session: Session = Depends(get_session)):
     user = session.get(User, user_id)
     return messages_non_lus(user.messages_recus)
 
+#regarder les messages envoyés 
 @app.get("/users/{user_id}/sent", response_model = List[Message])
 def get_user(user_id: int, session: Session = Depends(get_session)):
     user = session.get(User, user_id)
     return user.messages_envoyes
 
+#récupère le contenu d'un message
 @app.get("/messages/{message_id}", response_model = str)
 def get_message_content(message_id: int, session: Session = Depends(get_session)):
     message = session.get(Message, message_id)
     return message.mess_content
 
+#met à jour le statut du message comme 'lu' 
 @app.patch("/messages/{message_id}/read", response_model = Message)
 def get_user2(message_id: int, session: Session = Depends(get_session)):
     message = session.get(Message, message_id)
@@ -154,6 +161,7 @@ def get_user2(message_id: int, session: Session = Depends(get_session)):
     session.refresh(message)  
     return message
 
+#possibilité de supprimer un message 
 @app.delete("/messages/{message_id}")
 def delete_message(message_id :int, session:Session = Depends(get_session)):
     message = session.get(Message, message_id)
